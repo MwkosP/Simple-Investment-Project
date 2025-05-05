@@ -1,0 +1,1472 @@
+//CLASS MAIN
+public class Main {
+
+	public static void main(String[] args) {
+		
+		 new Application();
+		
+	}
+
+}
+
+
+
+
+
+
+
+//CLASS APPLICATION
+
+import java.awt.*;
+import java.awt.event.*;
+import java.io.File;
+import java.io.IOException;
+
+import javax.swing.*;
+
+public class Application implements ActionListener {
+
+    public static JFrame frame; // static so i can switch between windows and properties
+    JMenuBar menuBar;
+    JMenu fileMenu;
+    JMenu editMenu;
+    JMenu helpMenu;
+    JMenuItem loadItem;
+    JMenuItem saveItem;
+    JMenuItem exitItem;
+    JButton iconButton; // Change from JLabel to JButton
+    ImageIcon loadIcon;
+
+    JLabel homeLabel;
+    JButton positionCalculatorButton;
+    static JButton percentageBasedPositionCalculatorButton;
+    JButton livePnLTrackerSheetButton;
+    JButton livePriceDataButton;
+    JButton currencyConverterButton;
+    JButton button6;
+    JButton usefullLinksButton;
+   
+    public Application() {
+        // Initialize the JFrame
+        frame = new JFrame();
+        frame.setTitle("Kwstas-Mwkos Investments");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(1050, 800);  // Increased size to accommodate more buttons//650,600
+        frame.setResizable(true);
+        //Center the frame on the screen
+        frame.setLocationRelativeTo(null);
+        frame.setLayout(new GridBagLayout());  // Using GridBagLayout
+        GridBagConstraints gbc = new GridBagConstraints();
+
+        // Load the title icon from resources
+        ImageIcon icon = new ImageIcon(Application.class.getResource("/Pic.jpg"));
+
+        // Set the icon
+        frame.setIconImage(icon.getImage());
+        
+        // Load and resize the settings icon
+        loadIcon = new ImageIcon(getClass().getResource("/Settings.png"));
+        Image image = loadIcon.getImage();
+        Image resizedImage = image.getScaledInstance(30, 20, java.awt.Image.SCALE_SMOOTH);
+        loadIcon = new ImageIcon(resizedImage);
+
+        // Setup MenuBar
+        menuBar = new JMenuBar();
+
+        fileMenu = new JMenu("File");
+        editMenu = new JMenu("Edit");
+        helpMenu = new JMenu("Help");
+
+        loadItem = new JMenuItem("Load");
+        saveItem = new JMenuItem("Save");
+        exitItem = new JMenuItem("Exit");
+
+        loadItem.addActionListener(this);
+        saveItem.addActionListener(this);
+        exitItem.addActionListener(this);
+
+        fileMenu.setMnemonic(KeyEvent.VK_F); // Alt + f for file
+        editMenu.setMnemonic(KeyEvent.VK_E); // Alt + e for edit
+        helpMenu.setMnemonic(KeyEvent.VK_H); // Alt + h for help
+        loadItem.setMnemonic(KeyEvent.VK_L); // l for load
+        saveItem.setMnemonic(KeyEvent.VK_S); // s for save
+        exitItem.setMnemonic(KeyEvent.VK_E); // e for exit
+
+        fileMenu.add(loadItem);
+        fileMenu.add(saveItem);
+        fileMenu.add(exitItem);
+
+        menuBar.add(fileMenu);
+        menuBar.add(editMenu);
+        menuBar.add(helpMenu);
+
+        // Adding a glue component to push the icon to the right
+        menuBar.add(Box.createHorizontalGlue());
+
+        // Adding the icon as a JButton at the right end of the JMenuBar
+        iconButton = new JButton(loadIcon);
+        iconButton.setBorderPainted(false); // Remove border for a cleaner look
+        iconButton.setContentAreaFilled(false); // Remove background fill
+        
+      
+        iconButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+              
+                // Generate the Investment Calculation Page
+                SettingsFrame settingsFrame = new SettingsFrame();
+            }
+        });
+        
+
+        menuBar.add(iconButton);
+
+        frame.setJMenuBar(menuBar);
+
+        // Setup "Home Page" label
+        homeLabel = new JLabel("Home Page");
+        homeLabel.setFont(new Font("Comic Sans MS", Font.BOLD, 32));//Tahoma,Serif
+
+        // Use GridBagConstraints for dynamic positioning and resizing
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2; // Make the label span two columns
+        gbc.insets = new Insets(10, 10, 10, 10); // Padding
+        gbc.anchor = GridBagConstraints.CENTER; // Center the label
+        frame.add(homeLabel, gbc);
+
+        // Setup "Investment Calculation" button
+        positionCalculatorButton = new JButton("Position Calculator");
+        positionCalculatorButton.setBackground(Color.YELLOW); 
+        positionCalculatorButton.setFont(new Font("Comic Sans MS", Font.BOLD, 12));//Tahoma,Serif
+        positionCalculatorButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                //frame.setVisible(false);
+                // Generate the Investment Calculation Page
+                PositionCalculatorPage invCalcPage = new PositionCalculatorPage();
+            }
+        });
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.gridwidth = 1; // Span only one column for buttons
+        gbc.fill = GridBagConstraints.HORIZONTAL; // Allow resizing horizontally
+        frame.add(positionCalculatorButton, gbc);
+
+        // Setup "Minimal Price Loss Calculation" button
+        percentageBasedPositionCalculatorButton = new JButton("Percentage-Based Position Calculator");
+        percentageBasedPositionCalculatorButton.setBackground(Color.YELLOW);
+        percentageBasedPositionCalculatorButton.setFont(new Font("Comic Sans MS", Font.BOLD, 12));//Tahoma,Serif
+        percentageBasedPositionCalculatorButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                //frame.setVisible(false);
+                // Generate the Minimal Price Loss Calculation Page
+                PercentageBasedPositionCalculatorPage percentageBasedCalculatorPage = new PercentageBasedPositionCalculatorPage();
+            }
+        });
+
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.gridwidth = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL; // Allow resizing horizontally
+        frame.add(percentageBasedPositionCalculatorButton, gbc);
+
+        // Setup 5 additional buttons
+        livePnLTrackerSheetButton = new JButton("Live PnL Tracker Sheet");
+        livePnLTrackerSheetButton.setBackground(Color.YELLOW);
+        livePnLTrackerSheetButton.setFont(new Font("Comic Sans MS", Font.BOLD, 12));//Tahoma,Serif
+        livePnLTrackerSheetButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                
+            	openLivePnLTrackerSheet();
+            	
+            }
+        });
+
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.gridwidth = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        frame.add(livePnLTrackerSheetButton, gbc);
+
+        livePriceDataButton = new JButton("Live Price Data");
+        livePriceDataButton.setBackground(Color.YELLOW);
+        livePriceDataButton.setFont(new Font("Comic Sans MS", Font.BOLD, 12));//Tahoma,Serif
+        livePriceDataButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            	setButtonsColor();//for now
+            }
+        });
+        
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        gbc.gridwidth = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        frame.add(livePriceDataButton, gbc);
+
+        currencyConverterButton = new JButton("Currency Converter");
+        currencyConverterButton.setBackground(Color.YELLOW);
+        currencyConverterButton.setFont(new Font("Comic Sans MS", Font.BOLD, 12));//Tahoma,Serif
+
+        gbc.gridx = 0;
+        gbc.gridy = 5;
+        gbc.gridwidth = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        frame.add(currencyConverterButton, gbc);
+
+        button6 = new JButton("Button 6");
+        button6.setBackground(Color.YELLOW);
+        button6.setFont(new Font("Comic Sans MS", Font.BOLD, 12));//Tahoma,Serif
+
+        gbc.gridx = 0;
+        gbc.gridy = 6;
+        gbc.gridwidth = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        frame.add(button6, gbc);
+
+        
+        
+        usefullLinksButton = new JButton("Usefull Links");
+        usefullLinksButton.setBackground(Color.YELLOW);
+        usefullLinksButton.setFont(new Font("Comic Sans MS", Font.BOLD, 12));//Tahoma,Serif
+        usefullLinksButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                
+                // Generate the Minimal Price Loss Calculation Page
+                UsefullLinksPage usefullLinksPage = new UsefullLinksPage();
+            }
+        });
+
+        gbc.gridx = 0;
+        gbc.gridy = 7;
+        gbc.gridwidth = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        frame.add(usefullLinksButton, gbc);
+
+        // Set the frame to be visible
+        frame.setVisible(true);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        // Handle menu actions
+        if (e.getSource() == loadItem) {
+            System.out.println("*beep boop* you loaded a file");
+        }
+        if (e.getSource() == saveItem) {
+            System.out.println("*beep boop* you saved a file");
+        }
+        if (e.getSource() == exitItem) {
+            System.exit(0);
+        }
+        if (e.getSource() == iconButton) {
+            //JOptionPane.showMessageDialog(frame, "Settings clicked!");
+        }
+    }
+
+    public void setButtonsColor(/*int red,int green,int blue*/){
+    	this.positionCalculatorButton.setBackground(new Color(153, 153, 255));
+        this.percentageBasedPositionCalculatorButton.setBackground(new Color(153, 153, 255));
+        this.livePnLTrackerSheetButton.setBackground(new Color(153, 153, 255));
+        this.livePriceDataButton.setBackground(new Color(153, 153, 255));
+        this.currencyConverterButton.setBackground(new Color(153, 153, 255));
+        this.button6.setBackground(new Color(153, 153, 255));
+        this.usefullLinksButton.setBackground(new Color(153, 153, 255));
+    }
+    
+    public JFrame getFrame() {
+        return frame;
+    }
+    
+    public void openLivePnLTrackerSheet() {
+    	//BIG PROBLEMIF FILE IS MOVED
+    	
+    	
+    	// Get the PDF file path from environment variable
+        String pdfPath = System.getenv("PDF_FILE_PATH");
+        if (pdfPath == null) {
+            System.out.println("PDF_FILE_PATH environment variable is not set.");
+            return; // Exit if the variable is not set
+        }
+
+        File pdfFile = new File(pdfPath);
+
+        // Open the PDF file
+        if (Desktop.isDesktopSupported()) {
+            try {
+                Desktop.getDesktop().open(pdfFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("Desktop is not supported on this platform.");
+        }
+    }
+    
+}
+
+
+
+
+
+
+
+
+
+//CLASS PercentageBasedPositionCalculatorPage
+
+
+import java.awt.*;
+import javax.swing.*;
+
+public class PercentageBasedPositionCalculatorPage {
+
+    public JFrame frame;
+    JLabel entryPriceLabel;
+    JLabel moneyInvestedLabel;
+    JLabel desiredPercentageLabel;
+    JLabel leverageLabel;
+    
+    JTextField entryPriceField;
+    JTextField moneyInvestedField;
+    
+    JComboBox<String> percentageDropDown;
+    JComboBox<String> leverageDropDown;
+    
+    JButton calculateButton;
+
+    public PercentageBasedPositionCalculatorPage() {
+        // Initialize the JFrame
+        frame = new JFrame("Percentage Based Calculator");
+        frame.setSize(400, 350);  // Set frame size
+        //Set the location of the frame to the top left of the screen (0, 0)
+        frame.setLocation(0, 0);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setLayout(new GridBagLayout());  // Use GridBagLayout
+        GridBagConstraints gbc = new GridBagConstraints();
+
+        // Labels
+        entryPriceLabel = new JLabel("Entry Price:");
+        moneyInvestedLabel = new JLabel("Money Invested:");
+        desiredPercentageLabel = new JLabel("Desired % Stop Loss:");
+        leverageLabel = new JLabel("Leverage:");
+        
+        // Text Fields
+        entryPriceField = new JTextField(10);  // 10 columns wide
+        moneyInvestedField = new JTextField(10);
+        
+        // Percentage Dropdown (1% to 100%)
+        String[] percentages = new String[100];
+        for (int i = 0; i < 100; i++) {
+            percentages[i] = (i + 1) + "%";
+        }
+        percentageDropDown = new JComboBox<>(percentages);
+        
+        // Leverage Dropdown (x1 to x120)
+        String[] leverages = new String[120];
+        for (int i = 0; i < 120; i++) {
+            leverages[i] = "x" + (i + 1);
+        }
+        leverageDropDown = new JComboBox<>(leverages);
+        
+        // Calculate Button
+        calculateButton = new JButton("Calculate");
+        
+        // GridBagConstraints settings for layout
+        gbc.insets = new Insets(10, 10, 10, 10);  // Padding
+
+        // Entry Price Label and Field
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        frame.add(entryPriceLabel, gbc);
+        gbc.gridx = 1;
+        frame.add(entryPriceField, gbc);
+
+        // Money Invested Label and Field
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        frame.add(moneyInvestedLabel, gbc);
+        gbc.gridx = 1;
+        frame.add(moneyInvestedField, gbc);
+        
+        // Desired Percentage Stop Loss Label and Dropdown
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        frame.add(desiredPercentageLabel, gbc);
+        gbc.gridx = 1;
+        frame.add(percentageDropDown, gbc);
+        
+        // Leverage Label and Dropdown
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        frame.add(leverageLabel, gbc);
+        gbc.gridx = 1;
+        frame.add(leverageDropDown, gbc);
+        
+        // Calculate Button
+        gbc.gridx = 1;
+        gbc.gridy = 4;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        frame.add(calculateButton, gbc);
+
+        
+        // Set the frame location to the center of the screen
+        //frame.setLocationRelativeTo(null);
+        
+        // Set frame visibility
+        frame.setVisible(true);
+    }
+    
+}
+
+
+
+
+
+
+
+
+
+
+
+
+//CLASS POSITIONCALCULATORPAGE
+
+
+
+import javax.swing.*;
+
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Toolkit;
+import java.awt.event.*;
+
+public class PositionCalculatorPage{
+
+	//JFrame
+	public static JFrame frame = new JFrame();
+	public static int framex=600, framey=550;
+	
+	//JLabels
+	public static JLabel titleLabel = new JLabel();
+	public static JLabel entryPriceLabel = new JLabel();
+	public static JLabel moneyInvestedLabel = new JLabel();
+	public static JLabel takeProfitLabel = new JLabel();
+	public static JLabel stopLossLabel = new JLabel();
+	public static JLabel longShortLabel = new JLabel();
+	public static JLabel leverageLabel = new JLabel();
+	
+	//JTextFields
+	public static JTextField entryPriceTextField = new JTextField();
+	public static JTextField moneyInvestedTextField = new JTextField();
+	public static JTextField takeProfitTextField = new JTextField();
+	public static JTextField stopLossTextField = new JTextField();
+	public static boolean stopLossEntered = false;
+	
+	//JComboBoxes
+	public static String[] op = {"Long","Short"};
+	public static JComboBox<String> longShortJComboBox = new JComboBox<>(op);
+	public static String[] options = {	"x1","x2","x3","x4","x5","x6","x7","x8","x9","x10","x11","x12","x13","x14","x15","x16","x17","x18","x19","x20","x21","x22","x23","x24","x25","x26","x27","x28","x29","x30","x31","x32","x33","x34","x35","x36","x37","x38","x39","x40","x41","x42","x43","x44","x45","x46","x47","x48","x49","x50","x51","x52","x53","x54","x55","x56","x57","x58","x59","x60","x61","x62","x63","x64","x65","x66","x67","x68","x69","x70","x71","x72","x73","x74","x75","x76","x77","x78","x79","x80","x81","x82","x83","x84","x85","x86","x87","x88","x89","x90","x91","x92","x93","x94","x95","x96","x97","x98","x99","x100","x101","x102","x103","x104","x105","x106","x107","x108","x109","x110","x111","x112","x113","x114","x115","x116","x117","x118","x119","x120"};
+	public static JComboBox<String> leverageJComboBox = new JComboBox<>(options);
+	public static String[] option = {"EUR","USDT"};
+	public static JComboBox<String> moneyInvestedJComboBox = new JComboBox<>(option);
+	
+	//JButtons
+	public static String selectedOption;
+	public static JButton calculationButton = new JButton();
+	public static JButton backButton = new JButton();
+	
+	
+	
+
+	//CONSTRUCTOR
+	public PositionCalculatorPage(){
+		generate_Frame();
+		generate_Labels();
+		generate_TextFields();
+		apply_Restrictions();
+		generate_JCombo();
+		generate_Buttons();
+
+	}
+	
+
+	
+	void generate_Frame(){
+		//Frame Stuff
+		frame.setTitle("Kwstas-Mwkos Investments");
+		frame.setLayout(null); 
+		frame.setResizable(false);
+		frame.setSize(framex,framey);  
+		frame.setVisible(true);
+		frame.getContentPane().setBackground(Color.LIGHT_GRAY);
+		
+		// Load the application icon
+        ImageIcon icon = new ImageIcon(Application.class.getResource("/Pic.jpg"));
+
+        // Set the application icon
+        frame.setIconImage(icon.getImage());
+		
+		//Add Labels
+		frame.add(titleLabel);
+		frame.add(entryPriceLabel);
+		frame.add(moneyInvestedLabel);
+		frame.add(takeProfitLabel);
+		frame.add(stopLossLabel);
+		frame.add(longShortLabel);
+		frame.add(leverageLabel);
+		
+		
+		//Add TextFields
+		frame.add(entryPriceTextField);
+		frame.add(moneyInvestedTextField);
+		frame.add(takeProfitTextField);
+		frame.add(stopLossTextField);
+		
+		
+		//Add ComboBoxes
+		frame.add(longShortJComboBox);
+		frame.add(leverageJComboBox);
+		frame.add(moneyInvestedJComboBox);
+		
+		//Add Buttons
+		frame.add(calculationButton);
+		frame.add(backButton);
+		
+		
+	}
+	
+	
+	void generate_Labels(){
+		
+		//COLORS
+		Color labelsColor= new Color(0,0,0);
+		Color tpColor= new Color(50,205,50);
+		Color slColor= new Color(255,0,0);
+		Color positionColor= new Color(148,0,211);
+		Color leverageColor= new Color(255,165,0);
+		
+		
+		
+
+		//TitleLabel
+		titleLabel.setText("Crypto Investment Calculation");
+		titleLabel.setBounds(180,10,280,30);
+		titleLabel.setForeground(labelsColor);
+		//set font size
+        Font titleFont =  new Font("SansSerif", Font.BOLD, 18); // Larger size, e.g., 18 points
+        titleLabel.setFont(titleFont);
+		
+		
+		//EntryPriceLabel
+		entryPriceLabel.setText("Entry Price:");
+		entryPriceLabel.setBounds(150,60,197,110);
+		entryPriceLabel.setForeground(labelsColor);
+		
+		//MoneyInvestedLabel
+		moneyInvestedLabel.setText("Money Invested:");
+		moneyInvestedLabel.setBounds(350,60,197,110);
+		moneyInvestedLabel.setForeground(labelsColor);
+		
+		//TakeProfitLabel
+		takeProfitLabel.setText("Take Profit:");
+		takeProfitLabel.setBounds(150,160,197,110);
+		takeProfitLabel.setForeground(tpColor);
+		
+		//StopLossLabel
+		stopLossLabel.setText("Stop Loss:");
+		stopLossLabel.setBounds(350,160,197,110);
+		stopLossLabel.setForeground(slColor);
+		
+		//LeverageLabel
+		leverageLabel.setText("Leverage:");
+		leverageLabel.setBounds(350,260,197,110);
+		leverageLabel.setForeground(leverageColor);
+		
+		//longShortLabel
+		longShortLabel.setText("Position:");
+		longShortLabel.setBounds(150,260,197,110);
+		longShortLabel.setForeground(positionColor);
+		
+		
+	}
+	
+	
+	void generate_TextFields(){
+		
+		//EntryPriceTextField
+		entryPriceTextField.setBounds(150,130,100,25);
+		
+		
+		//MoneyInvestedTextField 
+		moneyInvestedTextField.setBounds(350,130,100,25);
+		
+		//TakeProfitTextField
+		takeProfitTextField.setBounds(150,230,100,25);
+		
+		//StopLossTextField
+		stopLossTextField.setBounds(350,230,100,25);
+	}
+	
+	
+	void generate_JCombo(){
+		
+		//moneyInvested
+		moneyInvestedJComboBox.setBounds(450, 130, 60, 25);
+		
+		//longShort
+		longShortJComboBox.setBounds(150, 330, 60, 25);
+		
+		//leverage
+		leverageJComboBox.setBounds(350, 330, 55, 25); 
+		
+	}
+	
+	
+	void generate_Buttons(){
+       
+        //Calculation Button
+		
+		// Define custom color using RGB values
+        Color calculationColor = new Color(102, 255, 255); 
+		
+        calculationButton.setText("Calculate");
+        calculationButton.setBounds(410,420 , 110, 30);
+        calculationButton.setBackground(calculationColor);
+        
+        
+        
+        calculationButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            	
+            	
+            	
+            	//if inof isnt correct then messages appear from correctinput
+            	//Checks if TextFields are Correct and entered.//Generate a New Result Page Showing the calculation Info
+            	if(correctInput()) {
+            		
+            		frame.setVisible(false);
+                	PositionCalculatorResultPage calculation = new PositionCalculatorResultPage(entryPriceTextField.getText(),moneyInvestedTextField.getText(),(String)moneyInvestedJComboBox.getSelectedItem(),takeProfitTextField.getText(),stopLossTextField.getText(),(String)longShortJComboBox.getSelectedItem(),(String)leverageJComboBox.getSelectedItem());
+                	calculation.generate_Result_Page();
+            		
+                }
+            	
+          
+            }
+        });
+        
+        
+        /*
+        //Back Button
+        backButton.setText("<- Back");
+        backButton.setBounds(70,420 , 110, 30);
+        backButton.setBackground(calculationColor);
+        
+        
+        backButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            	
+            	//dispose this page and re appear Application Page
+            	
+            	
+            	frame.getContentPane().remove(backButton);
+            	frame.getContentPane().remove(calculationButton);
+            	frame.getContentPane().removeAll();
+            	
+            	frame.dispose();
+            	Application.frame.setVisible(true);
+            	
+            	
+            }
+        });
+        */
+	}
+	
+	
+	void apply_Restrictions(){
+		restrictToFloat(entryPriceTextField);
+		restrictToFloat(moneyInvestedTextField);
+		restrictToFloat(takeProfitTextField);
+		restrictToFloat(stopLossTextField);
+	}
+	
+	
+	boolean correctInput() {
+	    String entry = entryPriceTextField.getText();
+	    String money = moneyInvestedTextField.getText();
+	    String take = takeProfitTextField.getText();
+	    String stop = stopLossTextField.getText();
+	    String longshort = (String) longShortJComboBox.getSelectedItem();
+	    
+	    boolean anyFieldEmpty = entry.isEmpty() || money.isEmpty() || take.isEmpty() || stop.isEmpty();
+
+	    // Check if any text field is empty
+	    if (anyFieldEmpty) {
+	        JOptionPane.showMessageDialog(this.frame, "Please input all TextFields.", "Invalid Input", JOptionPane.WARNING_MESSAGE);
+	        return false;
+	    }
+
+	    // Parse text fields
+	    float ep, tp, sl;
+	    try {
+	        ep = Float.parseFloat(entry);
+	        tp = Float.parseFloat(take);
+	        sl = Float.parseFloat(stop);
+	    } catch (NumberFormatException ex) {
+	        JOptionPane.showMessageDialog(this.frame, "Please enter valid numeric values.", "Invalid Input", JOptionPane.WARNING_MESSAGE);
+	        return false;
+	    }
+
+	    // Check for additional conditions based on parsed values
+	    if (longshort.equals("Long")) {
+	        if (!(tp > ep && sl < ep)) {
+	            JOptionPane.showMessageDialog(this.frame, "In Longs:\nEntry Price < Take Profit \nEntry Price < Stop Loss", "Invalid Input", JOptionPane.WARNING_MESSAGE);
+	            return false;
+	        }
+	    } else {
+	        if (!(tp < ep && sl > ep)) {
+	            JOptionPane.showMessageDialog(this.frame, "In Shorts:\nEntry Price > Take Profit \nEntry Price < Stop Loss", "Invalid Input", JOptionPane.WARNING_MESSAGE);
+	            return false;
+	        }
+	    }
+
+	    return true;
+	}
+
+
+	
+	
+	
+	
+	private static void restrictToFloat(JTextField textField) {
+		
+        textField.setTransferHandler(null); // Disable cut/copy/paste operations
+
+        textField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+            	
+            	
+                char c = e.getKeyChar();
+                if (!((c >= '0' && c <= '9') || c == '.' || c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_DELETE)) {
+                    e.consume(); // Ignore the event
+                   
+                }
+            }
+        });
+        
+        
+        
+        textField.getDocument().addDocumentListener(new DocumentListener() {
+        	int maxLength=6;
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                // Called when text is inserted into the document
+                if (textField.getText().length() > maxLength) {
+                    SwingUtilities.invokeLater(() -> {
+                        textField.setText(textField.getText().substring(0, maxLength));
+                    });
+                }
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                // Called when text is removed from the document
+                // No need for any action here
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                // Called when attributes of the document change
+                // This is less relevant for plain text fields
+            }
+        });
+
+        
+	}
+	
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//CLASS PositionCalculatorResultPage
+
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.*;
+
+public class PositionCalculatorResultPage {
+	
+	public static JButton backButton = new JButton();
+	
+	//Entry Price:
+	public static float entryPrice;
+	//Money Invested:
+	public static float moneyInvested;
+	//Money Currency:
+	public static String moneyCurrency;
+	//Take Profit:
+	public static float takeProfit;
+	//Stop Loss:
+	public static float stopLoss;
+	//Long Short:
+	public static String longShort;
+	//Leverage:
+	public static String leverage;
+	
+	//---------------------------------
+	
+	public static float profitp ;
+	public static float profit ;
+	public static float profitTotalCapital;
+	public static float lossp ;
+	public static float loss ;
+	public static float lossTotalCapital;
+	public static float rrr ;//risk-reward ratio
+	public static float l;//leverage
+	public static float lp;//liquidationPrice
+	
+	
+	//CONSTRUCTOR
+	PositionCalculatorResultPage(String eP,String m,String mC,String tP,String sL,String lS,String lev){
+		
+
+		this.entryPrice = Float.parseFloat(correctString(eP));
+		this.moneyInvested = Float.parseFloat(correctString(m));
+		this.moneyCurrency = mC;
+		this.takeProfit = Float.parseFloat(correctString(tP));
+		this.stopLoss = Float.parseFloat(correctString(sL));
+		this.longShort = lS;
+		this.leverage = lev.substring(1);
+		///
+		l = Float.parseFloat(correctString(lev));
+		
+		this.profitp = Math.abs(((takeProfit-entryPrice)/entryPrice)*100*l);
+		this.profit = Math.abs(moneyInvested*profitp/100);
+		this.profitTotalCapital =Math.abs(this.moneyInvested + this.profit);//////-=---
+		this.lossp = Math.abs(((stopLoss-entryPrice)/entryPrice)*100*l);
+		this.loss = Math.abs(moneyInvested*lossp/100);
+		this.lossTotalCapital = Math.abs(this.moneyInvested - this.loss);
+		this.rrr = Math.abs(profitp/lossp);
+		if(longShort.equals("Long")) {
+			this.lp = Math.abs(entryPrice-(entryPrice/l));
+		}
+		else {
+			this.lp = Math.abs(entryPrice+(entryPrice/l));
+		}
+		
+	}
+	
+	
+	
+	//JFrame
+	public static JFrame frame = new JFrame();
+	public static int framex=650, framey=550;
+
+	//JLabels
+	public static JLabel entryPriceLabel = new JLabel();
+	public static JLabel moneyInvestedLabel = new JLabel();
+	public static JLabel takeProfitLabel = new JLabel();
+	public static JLabel stopLossLabel = new JLabel();
+	public static JLabel longShortLabel = new JLabel();
+	public static JLabel leverageLabel = new JLabel();
+	///
+	public static JLabel riskRewardLabel = new JLabel();
+	public static JLabel liquidationPriceLabel = new JLabel();
+	//
+	public static JLabel profitLossLabel = new JLabel();
+	public static JLabel profitLabel = new JLabel();
+	public static JLabel profitpLabel = new JLabel();
+	public static JLabel profitTotalCapitalLabel = new JLabel();
+	public static JLabel losspLabel = new JLabel();
+	public static JLabel lossLabel = new JLabel();
+	public static JLabel lossTotalCapitalLabel = new JLabel();
+	
+	
+	
+	
+	
+	//FUNCTIONS
+	void generate_Result_Page() {
+	
+		generate_Frame();
+		generate_Labels();
+		generate_Buttons();
+		
+	}
+	
+	
+	void generate_Frame(){
+		
+		// Load the icon from resources
+        ImageIcon icon = new ImageIcon(Application.class.getResource("/Pic.jpg"));
+
+        // Set the icon
+        frame.setIconImage(icon.getImage());
+		
+		//Frame Stuff
+        frame.setTitle("Kwstas-Mwkos Investments");
+		frame.setLayout(null); 
+		frame.setResizable(false);
+		frame.setSize(framex,framey);  
+		frame.setVisible(true);
+		
+		Color backgroundColor = new Color(240, 230, 140); 
+		frame.getContentPane().setBackground(backgroundColor);
+		
+		
+		//Add Labels
+		frame.add(entryPriceLabel);
+		frame.add(moneyInvestedLabel);
+		frame.add(takeProfitLabel);
+		frame.add(stopLossLabel);
+		frame.add(longShortLabel);
+		frame.add(leverageLabel);
+		//
+		frame.add(riskRewardLabel);
+		frame.add(liquidationPriceLabel);
+		//
+		frame.add(profitLossLabel);
+		frame.add(profitpLabel);
+		frame.add(profitLabel);
+		frame.add(profitTotalCapitalLabel);
+		frame.add(lossLabel);
+		frame.add(losspLabel);
+		frame.add(lossTotalCapitalLabel);
+		
+		
+		//Add buttons
+		frame.add(backButton);
+		
+	}
+	
+	
+	void generate_Labels() {
+		Color labelsColor= new Color(0,0,0);
+		Color profitColor= new Color(50,205,50);
+		Color lossColor= new Color(255,0,0);
+		Color positionColor= new Color(148,0,211);
+		Color leverageColor= new Color(255,165,0);
+		
+		//initialize loss for no bugs in case of sqitching between liquidation and no liquidation state from 1 Page to the other
+		lossLabel.setText("");
+		lossTotalCapitalLabel.setText("");
+		
+		
+
+		
+	    //entryPrice
+		entryPriceLabel.setText("Entry Price: "+Float.toString(entryPrice));
+		entryPriceLabel.setBounds(20,50,200,100);
+		entryPriceLabel.setForeground(labelsColor);
+		
+		//moneyInvested
+		moneyInvestedLabel.setText("Money Invested: "+Float.toString(moneyInvested)+" "+moneyCurrency);
+		moneyInvestedLabel.setBounds(20,20,200,100);
+		moneyInvestedLabel.setForeground(labelsColor);
+		
+		//takeProfit
+		takeProfitLabel.setText("Take Profit: "+Float.toString(takeProfit));
+		takeProfitLabel.setBounds(20,80,200,100);
+		takeProfitLabel.setForeground(labelsColor);
+		
+		//stopLoss
+		stopLossLabel.setText("Stop Loss: "+Float.toString(stopLoss));
+		stopLossLabel.setBounds(20,110,200,100);
+		stopLossLabel.setForeground(labelsColor);
+		
+		//longShort
+		longShortLabel.setText("Position: "+longShort);
+		longShortLabel.setBounds(20,140,200,100);
+		longShortLabel.setForeground(labelsColor);
+		
+		//leverage
+		leverageLabel.setText("Leverage: x"+leverage);
+		leverageLabel.setBounds(20,170,200,100);
+		leverageLabel.setForeground(labelsColor);
+		
+		///////
+		
+		//Risk-Reward Ratio
+		riskRewardLabel.setText("Risk Reward ratio: "+rrr);
+		riskRewardLabel.setBounds(420,20,200,100);
+		if(rrr>1.3) {
+			riskRewardLabel.setForeground(profitColor);
+		}
+		else {
+			riskRewardLabel.setForeground(lossColor);
+		}
+		
+		
+		//liquidationPrice
+		liquidationPriceLabel.setText("Liquidation Price: "+lp);
+		liquidationPriceLabel.setBounds(420,50,200,100);
+		liquidationPriceLabel.setForeground(leverageColor);
+		
+		////////////////////////////
+		
+		//Profit&Loss Calculation
+		profitLossLabel.setText("Profit & Loss Investment Calculation:");
+		profitLossLabel.setBounds(160,230,340,100);
+		//set font size
+        Font profitLossFont =  new Font("SansSerif", Font.BOLD, 18); // Larger size, e.g., 18 points
+        profitLossLabel.setFont(profitLossFont );
+		
+		
+		if(longShort.equals("Long")) {//LONG
+			System.out.println("long");
+			
+			
+			//Profit%
+			profitpLabel.setText("Profit(%): +" + profitp+" %");
+			profitpLabel.setBounds(20,270,200,100);
+			profitpLabel.setForeground(profitColor);
+			
+			//Profit 
+			profitLabel.setText("Profit: +" + profit+" "+moneyCurrency );
+			profitLabel.setBounds(20,300,200,100);
+			profitLabel.setForeground(profitColor);
+			
+			
+			//Profit Total Capital
+			profitTotalCapitalLabel.setText("Total Capital With Profit: +" +profitTotalCapital +" "+moneyCurrency );
+			profitTotalCapitalLabel.setBounds(20,330,300,100);
+			profitTotalCapitalLabel.setForeground(profitColor);
+			
+			
+			
+			//POSITION LONG
+			if(stopLoss<=lp && Integer.parseInt(leverage)>1) {
+				System.out.println("Liquid long");
+				//Loss%
+				losspLabel.setText("Liquidated Gambler");
+				losspLabel.setBounds(420,270,200,100);
+				losspLabel.setForeground(lossColor);
+			}
+			else {
+				System.out.println("long ok");
+				//Loss%
+				losspLabel.setText("Loss(%): -" + lossp+" %");
+				losspLabel.setBounds(420,270,200,100);
+				losspLabel.setForeground(lossColor);
+						
+			    //Loss
+				lossLabel.setText("Loss: -" + loss +" "+moneyCurrency);
+				lossLabel.setBounds(420,300,200,100);
+				lossLabel.setForeground(lossColor);
+				
+				//Loss Total Capital 
+				lossTotalCapitalLabel.setText("Total Capital With Loss: -" +lossTotalCapital +" "+moneyCurrency );
+				lossTotalCapitalLabel.setBounds(420,330,300,100);
+				lossTotalCapitalLabel.setForeground(lossColor);
+			}
+			
+			
+		}
+		else {//POSITION SHORT
+			
+			System.out.println("short");
+			
+			//Profit%
+			profitpLabel.setText("Profit(%): +" + profitp+" %");
+			profitpLabel.setBounds(20,270,200,100);
+			profitpLabel.setForeground(profitColor);
+			
+			//Profit 
+			profitLabel.setText("Profit: +" + profit+" "+moneyCurrency );
+			profitLabel.setBounds(20,300,200,100);
+			profitLabel.setForeground(profitColor);
+			
+			
+			//Profit Total Capital
+			profitTotalCapitalLabel.setText("Total Capital With Profit: +" +profitTotalCapital +" "+moneyCurrency );
+			profitTotalCapitalLabel.setBounds(20,330,300,100);
+			profitTotalCapitalLabel.setForeground(profitColor);
+			
+			
+			
+			if(stopLoss>=lp) {
+				System.out.println("liq short");
+				//Loss%
+				losspLabel.setText("Liquidated Gambler");
+				losspLabel.setBounds(420,270,200,100);
+				losspLabel.setForeground(lossColor);
+			}
+			else {
+				System.out.println("short ok");
+				//Loss%
+				losspLabel.setText("Loss(%): -" + lossp+" %");
+				losspLabel.setBounds(420,270,200,100);
+				losspLabel.setForeground(lossColor);
+						
+			    //Loss
+				lossLabel.setText("Loss: -" + loss +" "+moneyCurrency);
+				lossLabel.setBounds(420,300,200,100);
+				lossLabel.setForeground(lossColor);
+				
+				//Loss Total Capital 
+				lossTotalCapitalLabel.setText("Total Capital With Loss: -" +lossTotalCapital +" "+moneyCurrency );
+				lossTotalCapitalLabel.setBounds(420,330,300,100);
+				lossTotalCapitalLabel.setForeground(lossColor);
+			}
+		}
+		/*
+		//Profit%
+		profitpLabel.setText("Profit(%): +" + profitp+" %");
+		profitpLabel.setBounds(20,270,200,100);
+		profitpLabel.setForeground(profitColor);
+		
+		//Profit 
+		profitLabel.setText("Profit: +" + profit+" "+moneyCurrency );
+		profitLabel.setBounds(20,300,200,100);
+		profitLabel.setForeground(profitColor);
+		
+		
+		//Profit Total Capital
+		profitTotalCapitalLabel.setText("Total Capital With Profit: +" +profitTotalCapital +" "+moneyCurrency );
+		profitTotalCapitalLabel.setBounds(20,330,300,100);
+		profitTotalCapitalLabel.setForeground(profitColor);
+		
+		//
+		if(stopLoss<lp) {
+			//Loss%
+			losspLabel.setText("Trashcan");
+			losspLabel.setBounds(420,270,200,100);
+			losspLabel.setForeground(lossColor);
+		}
+		else {
+			//Loss%
+			losspLabel.setText("Loss(%): -" + lossp+" %");
+			losspLabel.setBounds(420,270,200,100);
+			losspLabel.setForeground(lossColor);
+					
+		    //Loss
+			lossLabel.setText("Loss: -" + loss +" "+moneyCurrency);
+			lossLabel.setBounds(420,300,200,100);
+			lossLabel.setForeground(lossColor);
+			
+			//Loss Total Capital 
+			lossTotalCapitalLabel.setText("Total Capital With Loss: -" +lossTotalCapital +" "+moneyCurrency );
+			lossTotalCapitalLabel.setBounds(420,330,300,100);
+			lossTotalCapitalLabel.setForeground(lossColor);
+		}
+		
+		*/
+		
+		
+	}
+	
+	
+	void generate_Buttons() {
+		
+		Color backColor = new Color(102, 255, 255); 
+		
+		//<-Back Button
+		backButton.setText("<- Back");
+        backButton.setBounds(20,430 , 110, 30);
+        backButton.setBackground(backColor);
+        
+		backButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            	
+            	//disappear this page and re appear invCalc Page
+            	frame.setVisible(false);
+            	PositionCalculatorPage.frame.setVisible(true);
+            }
+        });
+		
+	}
+	
+	
+	String correctString(String s) {
+    int length = s.length();
+    char[] c = s.toCharArray();
+    char[] charArray = new char[length];
+    int count = 0;
+    boolean hasDecimalPoint = false; // Flag to track if a decimal point has been encountered
+    
+    for (int i = 0; i < length; i++) {
+        if ((c[i] >= '0' && c[i] <= '9') || c[i] == '.') {
+            if (c[i] == '.') {
+                // Check if a decimal point has already been encountered
+                if (!hasDecimalPoint) {
+                    charArray[count] = c[i];
+                    count++;
+                    hasDecimalPoint = true;
+                }
+            } else {
+                charArray[count] = c[i];
+                count++;
+            }
+        }
+    }
+
+    // Create a new string with the valid characters
+    s = new String(charArray, 0, count);
+    return s;
+}
+
+	
+}
+
+
+
+
+
+
+
+
+
+
+//CLASS SETTINGS FRAME
+
+
+
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class SettingsFrame extends JFrame {
+
+    public SettingsFrame() {
+        setTitle("Settings");
+        setSize(600, 400);
+        setVisible(true);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setLocationRelativeTo(null); // Center the frame on screen
+
+        // Create a tabbed pane
+        JTabbedPane tabbedPane = new JTabbedPane();
+
+        // Add different panels for each settings category
+        tabbedPane.addTab("General", createGeneralPanel());
+        tabbedPane.addTab("Tabs", createTabsPanel());
+        tabbedPane.addTab("Alerts", createAlertsPanel());
+
+        // Add the tabbed pane to the frame
+        add(tabbedPane);
+    }
+
+    // Method to create the General settings panel
+    public JPanel createGeneralPanel() {
+        JPanel generalPanel = new JPanel();
+        generalPanel.setLayout(new BoxLayout(generalPanel, BoxLayout.Y_AXIS));
+
+        // Color picker section
+        JLabel backgroundColorLabel = new JLabel("Choose Background Color:");
+        
+        JButton colorPickerButton = new JButton("Pick a Color");
+
+        // Reset button
+        JButton resetColorButton = new JButton("Reset to Default Color");
+
+        // Align components to the left
+        backgroundColorLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        colorPickerButton.setAlignmentX(Component.LEFT_ALIGNMENT);
+        resetColorButton.setAlignmentX(Component.LEFT_ALIGNMENT);
+        
+        // Action listener for color picker
+        colorPickerButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Color chosenColor = JColorChooser.showDialog(null, "Select Background Color", generalPanel.getBackground());
+                if (chosenColor != null) {
+                    // Change the background of the panel to the selected color
+                    generalPanel.setBackground(chosenColor);
+                }
+            }
+        });
+
+        // Action listener for resetting to system default color
+        resetColorButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Reset the background to the system default
+                generalPanel.setBackground(null); // Set to null so it goes back to system default
+            }
+        });
+
+        // Add components to the general panel with padding for space, aligned left
+        generalPanel.add(Box.createRigidArea(new Dimension(0, 20))); // Add vertical space
+        generalPanel.add(backgroundColorLabel);
+        generalPanel.add(Box.createRigidArea(new Dimension(0, 10))); // Add space between label and button
+        generalPanel.add(colorPickerButton);
+        generalPanel.add(Box.createRigidArea(new Dimension(0, 20))); // Add space between buttons
+        generalPanel.add(resetColorButton);
+
+        return generalPanel;
+    }
+
+    // Method to create the Tabs settings panel
+    private JPanel createTabsPanel() {
+        JPanel tabsPanel = new JPanel();
+        tabsPanel.setLayout(new BoxLayout(tabsPanel, BoxLayout.Y_AXIS));
+
+        JLabel tabBehaviorLabel = new JLabel("Tab Behavior Settings:");
+        JCheckBox closeOnDoubleClick = new JCheckBox("Close tab on double click");
+        closeOnDoubleClick.setSelected(true);
+
+        JCheckBox warnOnClose = new JCheckBox("Warn before closing tabs");
+        warnOnClose.setSelected(false);
+
+        // Add settings to the panel
+        tabsPanel.add(tabBehaviorLabel);
+        tabsPanel.add(closeOnDoubleClick);
+        tabsPanel.add(warnOnClose);
+
+        return tabsPanel;
+    }
+
+    // Method to create the Alerts settings panel
+    public JPanel createAlertsPanel() {
+        JPanel alertsPanel = new JPanel();
+        alertsPanel.setLayout(new BoxLayout(alertsPanel, BoxLayout.Y_AXIS));
+
+        JLabel alertSettingsLabel = new JLabel("Alert Preferences:");
+        JCheckBox soundAlerts = new JCheckBox("Enable sound alerts");
+        soundAlerts.setSelected(true);
+
+        JCheckBox emailAlerts = new JCheckBox("Send email alerts");
+        emailAlerts.setSelected(false);
+
+        // Add settings to the panel
+        alertsPanel.add(alertSettingsLabel);
+        alertsPanel.add(soundAlerts);
+        alertsPanel.add(emailAlerts);
+
+        return alertsPanel;
+    }
+
+  
+}
+
+
+
+
+
+
+
+
+
+
+
+//CLASS UsefullLinksPage
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.net.URI;
+
+public class UsefullLinksPage extends JFrame {
+
+    public UsefullLinksPage() {
+        // Set the title and size of the new frame
+        setTitle("Useful Links");
+        setSize(400, 500);
+        setLayout(new GridLayout(12, 1)); // Adjust layout for extra components
+
+        // Create buttons for predefined useful links
+        JButton link1 = new JButton("Google");
+        JButton link2 = new JButton("Investing.com");
+        JButton link3 = new JButton("Yahoo Finance");
+        JButton link4 = new JButton("Bloomberg");
+        JButton link5 = new JButton("TradingView");
+        JButton link6 = new JButton("Fear and Greed Index");
+        JButton link7 = new JButton("Liquidation Heat Map");
+        JButton link8 = new JButton("Bitcoin Rainbow Chart");
+        JButton link9 = new JButton("Altcoin Hype Cycle Analysis");
+        JButton link10 = new JButton("Altcoin Season Index");
+
+        // Add ActionListeners to open predefined links
+        link1.addActionListener(e -> openWebpage("https://www.google.com"));
+        link2.addActionListener(e -> openWebpage("https://www.investing.com"));
+        link3.addActionListener(e -> openWebpage("https://finance.yahoo.com"));
+        link4.addActionListener(e -> openWebpage("https://www.bloomberg.com"));
+        link5.addActionListener(e -> openWebpage("https://www.tradingview.com"));
+        link6.addActionListener(e -> openWebpage("https://alternative.me/crypto/fear-and-greed-index/"));
+        link7.addActionListener(e -> openWebpage("https://www.coinglass.com/pro/futures/LiquidationHeatMap"));
+        link8.addActionListener(e -> openWebpage("https://www.blockchaincenter.net/en/bitcoin-rainbow-chart/"));
+        link9.addActionListener(e -> openWebpage("https://dailyhodl.com/2024/04/15/heres-when-altcoins-will-bottom-out-and-enter-next-hype-cycle-according-to-crypto-analyst/"));
+        link10.addActionListener(e -> openWebpage("https://www.blockchaincenter.net/en/altcoin-season-index/"));
+
+        // Custom link input area
+        JLabel enterLinkLabel = new JLabel("Enter your own link:");
+        //enterLinkLabel.setForeground(Color.YELLOW);
+        enterLinkLabel.setBackground(Color.LIGHT_GRAY);
+        enterLinkLabel.setOpaque(true);
+        JTextField customLinkField = new JTextField();
+        customLinkField.setBackground(Color.LIGHT_GRAY);
+        JButton openCustomLinkButton = new JButton("Add Link");
+        openCustomLinkButton.setBackground(Color.LIGHT_GRAY);
+
+        // Add ActionListener to open the custom link
+        openCustomLinkButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String customUrl = customLinkField.getText();
+                if (!customUrl.startsWith("http://") && !customUrl.startsWith("https://")) {
+                    customUrl = "https://" + customUrl;  // Ensure the URL starts with http/https
+                }
+                openWebpage(customUrl);
+            }
+        });
+
+        // Add the buttons and custom link input field to the frame
+        add(link1);
+        add(link2);
+        add(link3);
+        add(link4);
+        add(link5);
+        add(link6);
+        add(link7);
+        add(link8);
+        add(link9);
+        add(link10);
+
+        // Add custom link components
+        add(enterLinkLabel);
+        add(customLinkField);
+        add(openCustomLinkButton);
+
+        // Set frame visibility
+        setVisible(true);
+    }
+
+    // Method to open a webpage
+    private void openWebpage(String url) {
+        try {
+            Desktop.getDesktop().browse(new URI(url));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    
+}
+
+
+
+
+
+
+
