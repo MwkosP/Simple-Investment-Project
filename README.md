@@ -12,6 +12,8 @@ This is a Java-based desktop application for investors and traders. It features 
 - **Useful Links**: Provides quick access to frequently used investment resources.
 - **Additional Buttons**: Space for custom tools or future feature expansions.
 
+![image](https://github.com/user-attachments/assets/04c865a4-d4f6-4b22-b9e0-24683f07813c)
+
 ## 📌 Notes
 
 - GUI created using Java Swing.
