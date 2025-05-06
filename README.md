@@ -22,7 +22,8 @@ This is a Java-based desktop application for investors and traders. It features 
 ## 🧑‍💻 Author
 
 Created by **Panagiotis Mokos**  
-GitHub: [@MwkosP]([https://github.com/yourusername](https://github.com/MwkosP))
+GitHub: [@MwkosP](https://github.com/MwkosP)
+
 
 ---
 
