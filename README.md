@@ -26,4 +26,3 @@ GitHub: [@MwkosP]([https://github.com/yourusername](https://github.com/MwkosP))
 
 ---
 
-Let me know if you'd like to add screenshots, a license, or enhance the formatting for GitHub!
